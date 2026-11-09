@@ -1,0 +1,40 @@
+CLOUDFLARE-ൽ പ്രസിദ്ധീകരിക്കാനുള്ള ഘട്ടങ്ങൾ
+
+ആവശ്യം: കമ്പ്യൂട്ടറിൽ Node.js ഇൻസ്റ്റാൾ ചെയ്തിരിക്കണം. ZIP extract ചെയ്യുക; ആ ഫോൾഡർ Terminal-ൽ തുറക്കുക.
+
+1) Dependencies ഇൻസ്റ്റാൾ ചെയ്യുക:
+   npm install
+
+2) Cloudflare-ൽ Pages project ഒരിക്കൽ സൃഷ്ടിക്കുക:
+   npx wrangler pages project create faizu-afin-ai-universe
+   ചോദിക്കുന്ന production branch-ൽ main നൽകാം.
+
+3) D1 database സൃഷ്ടിക്കുക:
+   npx wrangler d1 create faizu-afin-users
+   ലഭിക്കുന്ന database_id കോപ്പി ചെയ്യുക.
+
+4) wrangler.toml തുറന്ന്
+   REPLACE_WITH_D1_DATABASE_ID
+   എന്നിടത്ത് ലഭിച്ച യഥാർത്ഥ database_id നൽകുക. Save ചെയ്യുക.
+
+5) Database പട്ടികകൾ സൃഷ്ടിക്കുക:
+   npm run db:migrate
+
+6) സ്വന്തം AI server (Ollama) HTTPS വഴി പ്രവർത്തിക്കുന്നുണ്ടെങ്കിൽ അതിന്റെ base URL secret ആയി ചേർക്കുക:
+   npx wrangler pages secret put OLLAMA_ORIGIN --project-name faizu-afin-ai-universe
+   ചോദിക്കുമ്പോൾ ഉദാഹരണത്തിന് https://ai.your-domain.example നൽകുക. /api/chat ചേർക്കരുത്.
+
+7) പ്രസിദ്ധീകരിക്കുക:
+   npm run deploy
+
+8) ലഭിക്കുന്ന *.pages.dev വിലാസം തുറന്ന് പരിശോധിക്കുക.
+
+പ്രധാന കുറിപ്പുകൾ:
+- Cloudflare Pages വെബ്സൈറ്റും API routes-ഉം നൽകും; വലിയ AI model Cloudflare Pages-ൽ തന്നെ പ്രവർത്തിക്കില്ല.
+- Online AI പ്രവർത്തിക്കാൻ നിങ്ങളുടെ സ്വന്തം Ollama server വേണം. അതിന്റെ HTTPS endpoint സുരക്ഷിതമാക്കണം; Ollama port നേരിട്ട് പൊതുഇന്റർനെറ്റിൽ തുറക്കരുത്.
+- Offline chat-ന് അനുയോജ്യമായ browser/WebGPUയും ആദ്യമായി model download ചെയ്യാനുള്ള ഇന്റർനെറ്റും ആവശ്യമാണ്.
+- ഈ പതിപ്പിൽ Email/Password auth + D1, Ollama text chat route എന്നിവയാണ് ബന്ധിപ്പിച്ചിരിക്കുന്നത്. Google login, image/video generation, voice, PDF/file contents analysis, payment/premium billing എന്നിവ പൂർത്തിയായിട്ടില്ല.
+- Google Login ബട്ടൺ placeholder ആണ്. പ്രവർത്തിക്കുന്ന Google OAuth ഇനിയും സജ്ജീകരിക്കണം.
+- Password കുറഞ്ഞത് 10 അക്ഷരമാകണം.
+
+മൊബൈൽ മാത്രം ഉപയോഗിച്ച് ZIP upload ചെയ്യാൻ ശ്രമിക്കുന്നതിനെക്കാൾ കമ്പ്യൂട്ടറിൽ Wrangler command ഉപയോഗിക്കുന്നത് വിശ്വസനീയമാണ്. Dashboard static upload മാത്രം ചെയ്താൽ Functions/D1 പ്രവർത്തിക്കില്ല.

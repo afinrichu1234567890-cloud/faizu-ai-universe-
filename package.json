@@ -1,0 +1,14 @@
+{
+  "name": "faizu-afin-ai-universe",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler pages dev dist",
+    "deploy": "wrangler pages deploy dist --project-name faizu-afin-ai-universe",
+    "db:create": "wrangler d1 create faizu-afin-users",
+    "db:migrate": "wrangler d1 migrations apply faizu-afin-users --remote"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
